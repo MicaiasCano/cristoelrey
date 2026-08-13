@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recetas Modernas</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <section class="hero">
+      <h1>
+        <a href="https://www.cristoelrey1994.org" target="_blank">
+          <img src="img/logo_cristoelrey.png" alt="Cristo El Rey">
+        </a>
+      </h1>
+
+      <p>
+        Buscador de "iglesias" y "lugares de reuni&oacute;n",
+        <br>bajo la cobertura del Consejo Pastoral de la
+        <br>Iglesia Evang&eacute;lica Pentecostal <b>Cristo El Rey</b> 
+        <br>(fichero de culto 1994),
+        <br> por <b>filial</b>, <b>anexo</b>, <b>calle</b>, <b>provincia</b>, <b>pa&iacute;s</b>
+        <br>(Argentina, Chile y Paraguay), y/o <b>d&iacute;as de reuni&oacute;n</b>.
+        <br>______________________________________________________
+        <br>Clickear sobre el logo para que el Google Maps le muestre
+        <br>la direcci&oacute;n exacta. Dios lo bendiga.
+      </p>
+    </section>
+
+    <!-- BUSCADOR -->
+    <div class="search-wrapper">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="Buscador..."
+        aria-label="Buscar recetas"
+      >
+    </div>
+
+    <!-- GRID -->
+    <section class="grid" id="recipeGrid"></section>
+
+    <!-- EMPTY -->
+    <div class="empty-state" id="emptyState">
+      No se ha encontrado ninguna referencia a la palabra puesta en el BUSCADOR.
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      ______________________________________________________
+      <br><br>...no dejando de congregarnos, como algunos tienen<br>por costumbre, sino exhortándonos; y tanto más,<br>cuanto veis que aquel día se acerca.
+      <br><br>(Hebreos 10:25)
+      <br>______________________________________________________
+      <br><br>
+      <a href="http://www.cristoelrey1994.org" target="_blank">
+        <img src="img/Logo_CristoElRey1994_blanco.png" alt="Cristo El Rey. filial/central MONTECASTRO" width="200" height="107">
+      </a>
+      <br><br><a href="mailto:cristoelrey1994.org@gmail.com"><b>cristoelrey1994.org@gmail.com</b></a>
+    </footer>
+
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
