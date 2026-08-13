@@ -344,3 +344,151 @@
       }
 
     }
+
+    
+/* ==========================================================================
+   7. WIDGET DE CHAT (BOTÓN FLOTANTE Y POPUP)
+   ========================================================================== */
+
+/* Botón Flotante Principal */
+.chat-widget-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #25D366; /* Verde oficial de WhatsApp */
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  overflow: hidden; /* Evita desbordamiento del icono */
+}
+
+/* Icono SVG del Botón Flotante */
+.chat-widget-btn svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+}
+
+.chat-widget-btn:hover {
+  transform: scale(1.08);
+}
+
+/* Ventana Modal / Popup del Chat */
+.chat-widget-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 320px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: none; /* Oculto por defecto mediante JavaScript */
+  flex-direction: column;
+  z-index: 9999;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  animation: chatFadeIn 0.25s ease-out;
+}
+
+/* Estado activo del Popup (Mostrar) */
+.chat-widget-popup.active {
+  display: flex;
+}
+
+/* Encabezado del Popup */
+.chat-widget-header {
+  background-color: #008df2;
+  color: #ffffff;
+  padding: 16px;
+  text-align: center;
+}
+
+.chat-widget-header h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.chat-widget-header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Cuerpo y Lista de Contactos */
+.chat-widget-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-contact-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333333;
+  transition: background-color 0.2s ease;
+}
+
+.chat-contact-item:hover {
+  background-color: #e9ecef;
+}
+
+/* Avatares e Imágenes de Contactos */
+.chat-contact-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.chat-contact-avatar svg,
+.chat-contact-avatar img {
+  width: 34px;
+  height: 34px;
+}
+
+/* Información del Contacto */
+.chat-contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-contact-title {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.chat-contact-desc {
+  font-size: 12px;
+  color: #666666;
+}
+
+/* Animaciones */
+@keyframes chatFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
