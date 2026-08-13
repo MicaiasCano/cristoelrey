@@ -174,7 +174,7 @@
 
     .card img {
       width: 100%;
-      aspect-ratio: 10 / 10;
+      /*aspect-ratio: 10 / 10;*/
       object-fit: cover;
       display: block;
       transition: transform 0.8s ease;
@@ -220,6 +220,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 15px;
+      margin: auto;
     }
 
     .card-button {
