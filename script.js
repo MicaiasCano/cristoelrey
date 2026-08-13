@@ -530,8 +530,7 @@ const recipes = [
     description: "Antequera 2965<br>(e/Luj&aacute;n y Alag&oacute;n)<br>Gonz&aacute;lez Cat&aacute;n<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes, Jueves,<br>Sabado: 19.30hs<br><br><b>Enc. de Obra:</b><br>Prebistero Ramon Martinez",
     link: "https://www.google.com/maps/place/Antequera+2965,+B1759+Gonz%C3%A1lez+Cat%C3%A1n,+Provincia+de+Buenos+Aires/@-34.7482329,-58.6406557,17z/data=!3m1!4b1!4m5!3m4!1s0x95bcc40b8e2d21dd:0x146fd90621de73ef!8m2!3d-34.7482329!4d-58.6406557?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D"
   },
-];
-/* ==========================================
+];/* ==========================================
    1. REFERENCIAS AL DOM
    ========================================== */
 const DOM = {
@@ -545,40 +544,15 @@ const DOM = {
 /* ==========================================
    2. UTILIDADES
    ========================================== */
-/**
- * Detecta si el usuario está en un dispositivo móvil por User-Agent.
- */
 const isMobileUserAgent = () =>
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-/**
- * Normaliza y verifica si una propiedad contiene el texto buscado.
- */
 const fieldIncludes = (fieldValue, query) =>
   fieldValue ? fieldValue.toLowerCase().includes(query) : false;
 
 /* ==========================================
-   3. CÁLCULO DE GRID Y RENDERIZADO
+   3. RENDERIZADO DE RECETAS
    ========================================== */
-/**
- * Asigna la propiedad CSS grid-template-columns según el total de items y el ancho de pantalla.
- */
-function updateGridColumns(count) {
-  const isMobile = window.innerWidth <= 768;
-
-  if (isMobile) {
-    DOM.recipeGrid.style.gridTemplateColumns =
-      count === 1 ? 'repeat(1, minmax(160px, 220px))' : 'repeat(2, 1fr)';
-  } else {
-    // Para desktop, limita entre 1 y 5 columnas según los resultados disponibles (evita los if/else repetitivos)
-    const columns = Math.min(Math.max(count, 1), 5);
-    DOM.recipeGrid.style.gridTemplateColumns = `repeat(${columns}, minmax(220px, 260px))`;
-  }
-}
-
-/**
- * Crea la estructura HTML de la tarjeta de una receta.
- */
 function createCardElement(recipe) {
   const card = document.createElement('article');
   card.className = 'card';
@@ -600,26 +574,17 @@ function createCardElement(recipe) {
   return card;
 }
 
-/**
- * Muestra u oculta elementos en pantalla según la lista de recetas enviada.
- */
 function renderRecipes(filteredRecipes = []) {
   if (!DOM.recipeGrid) return;
 
   DOM.recipeGrid.innerHTML = '';
-
   const isEmpty = filteredRecipes.length === 0;
 
   if (DOM.emptyState) {
     DOM.emptyState.style.display = isEmpty ? 'block' : 'none';
   }
 
-  if (isEmpty) {
-    DOM.recipeGrid.style.gridTemplateColumns = 'repeat(5, minmax(220px, 260px))';
-    return;
-  }
-
-  updateGridColumns(filteredRecipes.length);
+  if (isEmpty) return;
 
   const fragment = document.createDocumentFragment();
   filteredRecipes.forEach(recipe => {
@@ -656,20 +621,17 @@ function initChatWidget() {
 
   const isMobile = isMobileUserAgent();
 
-  // Actualizar URLs de enlaces con data-attributes
   const links = chatPopup.querySelectorAll('[data-desktop][data-mobile]');
   links.forEach(link => {
     const targetUrl = link.getAttribute(isMobile ? 'data-mobile' : 'data-desktop');
     if (targetUrl) link.setAttribute('href', targetUrl);
   });
 
-  // Mostrar / ocultar popup al hacer clic en el botón
   chatBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     chatPopup.classList.toggle('active');
   });
 
-  // Cerrar al hacer clic en cualquier lugar fuera del widget
   document.addEventListener('click', (e) => {
     if (!chatPopup.contains(e.target) && !chatBtn.contains(e.target)) {
       chatPopup.classList.remove('active');
@@ -681,15 +643,12 @@ function initChatWidget() {
    6. INICIALIZACIÓN
    ========================================== */
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar componentes
   initChatWidget();
 
-  // Escuchar entrada en el buscador
   if (DOM.searchInput) {
     DOM.searchInput.addEventListener('input', handleSearch);
   }
 
-  // Render inicial de recetas si existe la variable global 'recipes'
   if (typeof recipes !== 'undefined') {
     renderRecipes(recipes);
   }
