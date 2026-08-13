@@ -532,156 +532,165 @@ const recipes = [
   },
 ];
 /* ==========================================
-   1. ELEMENTOS DEL DOM
+   1. REFERENCIAS AL DOM
    ========================================== */
-const recipeGrid = document.getElementById('recipeGrid');
-const searchInput = document.getElementById('searchInput');
-const emptyState = document.getElementById('emptyState');
+const DOM = {
+  recipeGrid: document.getElementById('recipeGrid'),
+  searchInput: document.getElementById('searchInput'),
+  emptyState: document.getElementById('emptyState'),
+  chatBtn: document.getElementById('chatWidgetBtn'),
+  chatPopup: document.getElementById('chatWidgetPopup')
+};
 
 /* ==========================================
-   2. FUNCIONES
+   2. UTILIDADES
    ========================================== */
+/**
+ * Detecta si el usuario está en un dispositivo móvil por User-Agent.
+ */
+const isMobileUserAgent = () =>
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 /**
- * Ajusta dinámicamente las columnas del grid según la cantidad de resultados
- * y el tamaño de la pantalla.
+ * Normaliza y verifica si una propiedad contiene el texto buscado.
+ */
+const fieldIncludes = (fieldValue, query) =>
+  fieldValue ? fieldValue.toLowerCase().includes(query) : false;
+
+/* ==========================================
+   3. CÁLCULO DE GRID Y RENDERIZADO
+   ========================================== */
+/**
+ * Asigna la propiedad CSS grid-template-columns según el total de items y el ancho de pantalla.
  */
 function updateGridColumns(count) {
   const isMobile = window.innerWidth <= 768;
 
   if (isMobile) {
-    recipeGrid.style.gridTemplateColumns = count === 1 
-      ? 'repeat(1, minmax(160px, 220px))' 
-      : 'repeat(2, 1fr)';
+    DOM.recipeGrid.style.gridTemplateColumns =
+      count === 1 ? 'repeat(1, minmax(160px, 220px))' : 'repeat(2, 1fr)';
   } else {
-    // Para desktop: limita entre 1 y 5 columnas dinámicamente
+    // Para desktop, limita entre 1 y 5 columnas según los resultados disponibles (evita los if/else repetitivos)
     const columns = Math.min(Math.max(count, 1), 5);
-    recipeGrid.style.gridTemplateColumns = `repeat(${columns}, minmax(220px, 260px))`;
+    DOM.recipeGrid.style.gridTemplateColumns = `repeat(${columns}, minmax(220px, 260px))`;
   }
 }
 
 /**
- * Renderiza la lista de tarjetas en el contenedor.
+ * Crea la estructura HTML de la tarjeta de una receta.
  */
-function renderRecipes(filteredRecipes) {
-  recipeGrid.innerHTML = '';
+function createCardElement(recipe) {
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-image-wrapper">
+      <img src="${recipe.image}" alt="${recipe.recipe}" loading="lazy">
+      <div class="card-gradient"></div>
+    </div>
+    <div class="card-content">
+      <h2 class="card-title">${recipe.recipe}</h2>
+      <p class="card-description">${recipe.description}</p>
+      <div class="card-footer">
+        <a href="${recipe.link}" target="_blank" rel="noopener noreferrer" class="card-button">
+          cómo llegar
+        </a>
+      </div>
+    </div>
+  `;
+  return card;
+}
 
-  // Estado vacío (sin resultados)
-  if (filteredRecipes.length === 0) {
-    emptyState.style.display = 'block';
-    recipeGrid.style.gridTemplateColumns = 'repeat(5, minmax(220px, 260px))';
+/**
+ * Muestra u oculta elementos en pantalla según la lista de recetas enviada.
+ */
+function renderRecipes(filteredRecipes = []) {
+  if (!DOM.recipeGrid) return;
+
+  DOM.recipeGrid.innerHTML = '';
+
+  const isEmpty = filteredRecipes.length === 0;
+
+  if (DOM.emptyState) {
+    DOM.emptyState.style.display = isEmpty ? 'block' : 'none';
+  }
+
+  if (isEmpty) {
+    DOM.recipeGrid.style.gridTemplateColumns = 'repeat(5, minmax(220px, 260px))';
     return;
   }
 
-  emptyState.style.display = 'none';
-
-  // Aplicar layout dinámico
   updateGridColumns(filteredRecipes.length);
 
-  // Creación y renderizado de tarjetas
+  const fragment = document.createDocumentFragment();
   filteredRecipes.forEach(recipe => {
-    const card = document.createElement('article');
-    card.className = 'card';
-
-    card.innerHTML = `
-      <div class="card-image-wrapper">
-        <img
-          src="${recipe.image}"
-          alt="${recipe.recipe}"
-          loading="lazy"
-        >
-        <div class="card-gradient"></div>
-      </div>
-
-      <div class="card-content">
-        <h2 class="card-title">
-          ${recipe.recipe}
-        </h2>
-
-        <p class="card-description">
-          ${recipe.description}
-        </p>
-
-        <div class="card-footer">
-          <a
-            href="${recipe.link}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card-button"
-          >
-            cómo llegar
-          </a>
-        </div>
-      </div>
-    `;
-
-    recipeGrid.appendChild(card);
+    fragment.appendChild(createCardElement(recipe));
   });
+
+  DOM.recipeGrid.appendChild(fragment);
 }
 
 /* ==========================================
-   3. EVENTOS / LISTENERS
+   4. LÓGICA DE BÚSQUEDA
    ========================================== */
+function handleSearch(e) {
+  const query = e.target.value.toLowerCase().trim();
 
-// Evento del Buscador
-if (searchInput) {
-  searchInput.addEventListener('input', (e) => {
-    const value = e.target.value.toLowerCase().trim();
+  if (typeof recipes === 'undefined') return;
 
-    const filtered = recipes.filter(recipe => {
-      const recipeMatch = recipe.recipe ? recipe.recipe.toLowerCase().includes(value) : false;
-      const descriptionMatch = recipe.description ? recipe.description.toLowerCase().includes(value) : false;
-      const tagMatch = recipe.tag ? recipe.tag.toLowerCase().includes(value) : false;
+  const filtered = recipes.filter(recipe =>
+    fieldIncludes(recipe.recipe, query) ||
+    fieldIncludes(recipe.description, query) ||
+    fieldIncludes(recipe.tag, query)
+  );
 
-      return recipeMatch || descriptionMatch || tagMatch;
-    });
+  renderRecipes(filtered);
+}
 
-    renderRecipes(filtered);
+/* ==========================================
+   5. WIDGET DE CHAT
+   ========================================== */
+function initChatWidget() {
+  const { chatBtn, chatPopup } = DOM;
+
+  if (!chatBtn || !chatPopup) return;
+
+  const isMobile = isMobileUserAgent();
+
+  // Actualizar URLs de enlaces con data-attributes
+  const links = chatPopup.querySelectorAll('[data-desktop][data-mobile]');
+  links.forEach(link => {
+    const targetUrl = link.getAttribute(isMobile ? 'data-mobile' : 'data-desktop');
+    if (targetUrl) link.setAttribute('href', targetUrl);
+  });
+
+  // Mostrar / ocultar popup al hacer clic en el botón
+  chatBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    chatPopup.classList.toggle('active');
+  });
+
+  // Cerrar al hacer clic en cualquier lugar fuera del widget
+  document.addEventListener('click', (e) => {
+    if (!chatPopup.contains(e.target) && !chatBtn.contains(e.target)) {
+      chatPopup.classList.remove('active');
+    }
   });
 }
 
 /* ==========================================
-   4. INICIALIZACIÓN (DOM LOADED)
+   6. INICIALIZACIÓN
    ========================================== */
 document.addEventListener('DOMContentLoaded', () => {
-  // Renderizar recetas iniciales
-  if (typeof recipes !== 'undefined') {
-    renderRecipes(recipes);
+  // Inicializar componentes
+  initChatWidget();
+
+  // Escuchar entrada en el buscador
+  if (DOM.searchInput) {
+    DOM.searchInput.addEventListener('input', handleSearch);
   }
 
-  // --- WIDGET DE CHAT (POPUP & NAVEGACIÓN) ---
-  const chatBtn = document.getElementById('chatWidgetBtn');
-  const chatPopup = document.getElementById('chatWidgetPopup');
-
-  if (chatBtn && chatPopup) {
-    // Detección de dispositivos móviles
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
-
-    // Adaptar URLs según plataforma
-    const links = chatPopup.querySelectorAll('[data-desktop][data-mobile]');
-    links.forEach((link) => {
-      const targetUrl = isMobileDevice
-        ? link.getAttribute('data-mobile')
-        : link.getAttribute('data-desktop');
-      
-      if (targetUrl) {
-        link.setAttribute('href', targetUrl);
-      }
-    });
-
-    // Alternar visibilidad del popup
-    chatBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      chatPopup.classList.toggle('active');
-    });
-
-    // Cierra el widget si se hace clic fuera de él
-    document.addEventListener('click', (e) => {
-      if (!chatPopup.contains(e.target) && !chatBtn.contains(e.target)) {
-        chatPopup.classList.remove('active');
-      }
-    });
+  // Render inicial de recetas si existe la variable global 'recipes'
+  if (typeof recipes !== 'undefined') {
+    renderRecipes(recipes);
   }
 });
