@@ -531,16 +531,42 @@ const recipes = [
     link: "https://www.google.com/maps/place/Antequera+2965,+B1759+Gonz%C3%A1lez+Cat%C3%A1n,+Provincia+de+Buenos+Aires/@-34.7482329,-58.6406557,17z/data=!3m1!4b1!4m5!3m4!1s0x95bcc40b8e2d21dd:0x146fd90621de73ef!8m2!3d-34.7482329!4d-58.6406557?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D"
   },
 ];
-
-// Elementos del DOM
+/* ==========================================
+   1. ELEMENTOS DEL DOM
+   ========================================== */
 const recipeGrid = document.getElementById('recipeGrid');
 const searchInput = document.getElementById('searchInput');
 const emptyState = document.getElementById('emptyState');
 
-// Función para renderizar elementos en el grid
+/* ==========================================
+   2. FUNCIONES
+   ========================================== */
+
+/**
+ * Ajusta dinámicamente las columnas del grid según la cantidad de resultados
+ * y el tamaño de la pantalla.
+ */
+function updateGridColumns(count) {
+  const isMobile = window.innerWidth <= 768;
+
+  if (isMobile) {
+    recipeGrid.style.gridTemplateColumns = count === 1 
+      ? 'repeat(1, minmax(160px, 220px))' 
+      : 'repeat(2, 1fr)';
+  } else {
+    // Para desktop: limita entre 1 y 5 columnas dinámicamente
+    const columns = Math.min(Math.max(count, 1), 5);
+    recipeGrid.style.gridTemplateColumns = `repeat(${columns}, minmax(220px, 260px))`;
+  }
+}
+
+/**
+ * Renderiza la lista de tarjetas en el contenedor.
+ */
 function renderRecipes(filteredRecipes) {
   recipeGrid.innerHTML = '';
 
+  // Estado vacío (sin resultados)
   if (filteredRecipes.length === 0) {
     emptyState.style.display = 'block';
     recipeGrid.style.gridTemplateColumns = 'repeat(5, minmax(220px, 260px))';
@@ -549,30 +575,10 @@ function renderRecipes(filteredRecipes) {
 
   emptyState.style.display = 'none';
 
-  /* =========================
-     CENTRADO DINÁMICO
-  ========================= */
-  if (window.innerWidth <= 768) {
-    if (filteredRecipes.length === 1) {
-      recipeGrid.style.gridTemplateColumns = 'repeat(1, minmax(160px, 220px))';
-    } else {
-      recipeGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-    }
-  } else {
-    if (filteredRecipes.length === 1) {
-      recipeGrid.style.gridTemplateColumns = 'repeat(1, minmax(220px, 260px))';
-    } else if (filteredRecipes.length === 2) {
-      recipeGrid.style.gridTemplateColumns = 'repeat(2, minmax(220px, 260px))';
-    } else if (filteredRecipes.length === 3) {
-      recipeGrid.style.gridTemplateColumns = 'repeat(3, minmax(220px, 260px))';
-    } else if (filteredRecipes.length === 4) {
-      recipeGrid.style.gridTemplateColumns = 'repeat(4, minmax(220px, 260px))';
-    } else {
-      recipeGrid.style.gridTemplateColumns = 'repeat(5, minmax(220px, 260px))';
-    }
-  }
+  // Aplicar layout dinámico
+  updateGridColumns(filteredRecipes.length);
 
-  // Creación de tarjetas
+  // Creación y renderizado de tarjetas
   filteredRecipes.forEach(recipe => {
     const card = document.createElement('article');
     card.className = 'card';
@@ -613,45 +619,50 @@ function renderRecipes(filteredRecipes) {
   });
 }
 
-/* =========================
-   BUSCADOR
-========================= */
-searchInput.addEventListener('input', (e) => {
-  const value = e.target.value.toLowerCase().trim();
+/* ==========================================
+   3. EVENTOS / LISTENERS
+   ========================================== */
 
-  const filtered = recipes.filter(recipe => {
-    const recipeMatch = recipe.recipe ? recipe.recipe.toLowerCase().includes(value) : false;
-    const descriptionMatch = recipe.description ? recipe.description.toLowerCase().includes(value) : false;
-    const tagMatch = recipe.tag ? recipe.tag.toLowerCase().includes(value) : false;
+// Evento del Buscador
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    const value = e.target.value.toLowerCase().trim();
 
-    return recipeMatch || descriptionMatch || tagMatch;
+    const filtered = recipes.filter(recipe => {
+      const recipeMatch = recipe.recipe ? recipe.recipe.toLowerCase().includes(value) : false;
+      const descriptionMatch = recipe.description ? recipe.description.toLowerCase().includes(value) : false;
+      const tagMatch = recipe.tag ? recipe.tag.toLowerCase().includes(value) : false;
+
+      return recipeMatch || descriptionMatch || tagMatch;
+    });
+
+    renderRecipes(filtered);
   });
+}
 
-  renderRecipes(filtered);
-});
-
-/* =========================
-   INIT
-========================= */
-renderRecipes(recipes);
+/* ==========================================
+   4. INICIALIZACIÓN (DOM LOADED)
+   ========================================== */
 document.addEventListener('DOMContentLoaded', () => {
-  // ==========================================
-  // 1. WIDGET DE CHAT (POPUP & NAVEGACIÓN)
-  // ==========================================
+  // Renderizar recetas iniciales
+  if (typeof recipes !== 'undefined') {
+    renderRecipes(recipes);
+  }
+
+  // --- WIDGET DE CHAT (POPUP & NAVEGACIÓN) ---
   const chatBtn = document.getElementById('chatWidgetBtn');
   const chatPopup = document.getElementById('chatWidgetPopup');
 
-  // Solo ejecuta la lógica del chat si ambos elementos existen en el DOM
   if (chatBtn && chatPopup) {
-    // Detección de dispositivos móviles mediante User-Agent
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    // Detección de dispositivos móviles
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
 
-    // Adapta la URL de los enlaces según la plataforma (Móvil vs Desktop)
+    // Adaptar URLs según plataforma
     const links = chatPopup.querySelectorAll('[data-desktop][data-mobile]');
     links.forEach((link) => {
-      const targetUrl = isMobile
+      const targetUrl = isMobileDevice
         ? link.getAttribute('data-mobile')
         : link.getAttribute('data-desktop');
       
@@ -660,49 +671,17 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Alterna la visibilidad del widget al hacer clic en el botón principal
+    // Alternar visibilidad del popup
     chatBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       chatPopup.classList.toggle('active');
     });
 
-    // Cierra el widget si el usuario hace clic fuera de sus límites
+    // Cierra el widget si se hace clic fuera de él
     document.addEventListener('click', (e) => {
       if (!chatPopup.contains(e.target) && !chatBtn.contains(e.target)) {
         chatPopup.classList.remove('active');
       }
     });
-  }
-
-  // ==========================================
-  // 2. FILTRADOR DE LISTAS EN TIEMPO REAL
-  // ==========================================
-  const inputFilter = document.getElementById('filter');
-  const items = document.querySelectorAll('#slats ul li');
-
-  // Solo ejecuta si el campo de texto y los elementos a filtrar existen
-  if (inputFilter && items.length > 0) {
-    inputFilter.addEventListener('input', () => {
-      const searchTerm = normalizeText(inputFilter.value);
-
-      items.forEach((li) => {
-        const itemText = normalizeText(li.textContent);
-
-        // Muestra u oculta la fila según la coincidencia de texto
-        li.style.display = itemText.includes(searchTerm) ? '' : 'none';
-      });
-    });
-  }
-
-  /**
-   * Normaliza un string removiendo acentos/diacríticos y convirtiéndolo a minúsculas.
-   * @param {string} text - Texto a procesar.
-   * @returns {string} Texto limpio y en minúsculas.
-   */
-  function normalizeText(text) {
-    return text
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
   }
 });
