@@ -757,10 +757,13 @@ function updateCoverflow() {
     const isVisible = absRel <= CONFIG.maxVisible;
     const isActive = rel === 0;
 
+    // Si la pantalla es de 768px o menos, usa 1600; si es más grande, usa 240 (o CONFIG.depth)
+    const currentDepth = window.innerWidth <= 768 ? 1600 : (CONFIG.depth || 240);
+    
     // Fórmulas de posicionamiento 3D
     const scale = Math.max(0.4, 1 - absRel * CONFIG.scaleStep);
     const tx = rel * (CONFIG.gap * 30);
-    const tz = -absRel * CONFIG.depth;
+    const tz = -absRel * currentDepth;
     const ry = -rel * CONFIG.tilt;
     const rz = rel * CONFIG.sideTilt;
 
