@@ -2,13 +2,13 @@
 const recipes = [
   {
     recipe: "MONTE CASTRO",
-    image: "img/filial_monte_castro.jpg",
+    image: "img/Monte Castro.jpg",
     description: "Marcos Sastre 5062<br>Bº Montecastro<br>C.A.B.A.<br>Prov. Buenos Aires. Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes, Jueves, S&aacute;bado:<br>19.00hs<br>Domingo:<br>9.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Alfredo Narvaez",
     link: "https://maps.app.goo.gl/8o6NPLMM4PMuAkdA7",
   },
   {
     recipe: "ADONAI",
-    image: "img/filial_adonai.jpg",
+    image: "./img/filial Adonai.jpg",
     description: "Cazon 6675<br>(e/ Chopin y Chasaing)<br>Gregorio de Laferrere<br>Prov. Buenos Aires. Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles, Viernes:<br>19.00hs<br>Domingo:<br>18.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Ernesto Villan",
     link: "https://maps.app.goo.gl/8o6NPLMM4PMuAkdA7",
   },{
@@ -653,3 +653,174 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRecipes(recipes);
   }
 });
+
+
+
+
+// Configuración de datos
+const SLIDES = [
+  {
+    image: "./img/Monte Castro.jpg",
+    title: "Monte Castro"
+  },
+  {
+    image: "./img/filial Adonai.jpg",
+    title: "Adonai"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "Km 28"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "Oro Verde"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "Isidro Casanova"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "Barrio la Loma"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "La Roca Sagrada es Cristo"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "San Jose Oeste"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "Quitilipi"
+  },
+  {
+    image: "./img/Logo_Corona_Argentina_Dorada.png",
+    title: "La Cumbre del Calvario"
+  }
+];
+
+// Parámetros de la animación 3D
+const CONFIG = {
+  gap: 8,          // Distancia horizontal entre tarjetas
+  tilt: 12,        // Inclinación en el eje Y (grados)
+  sideTilt: 8,     // Inclinación en el eje Z (grados)
+  depth: 240,      // Profundidad 3D (px)
+  scaleStep: 0.16, // Reducción de escala por nivel
+  maxVisible: 2,   // Tarjetas visibles a cada lado de la activa
+  dimOpacity: 0.4  // Opacidad de las tarjetas inactivas (0 a 1)
+};
+
+let activeIndex = 0;
+let isLocked = false;
+
+const container = document.querySelector('.coverflow-container');
+const track = document.getElementById('coverflowTrack');
+
+// Inicializar la galería
+function initGallery() {
+  track.innerHTML = '';
+  
+  SLIDES.forEach((slide, index) => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.setAttribute('data-index', index);
+    
+    card.innerHTML = `
+      <img src="${slide.image}" alt="${slide.title}">
+      <div class="card-gradient"></div>
+      <div class="card-title">${slide.title}</div>
+      <div class="card-dimmer"></div>
+    `;
+    
+    card.addEventListener('click', () => handleCardClick(index));
+    track.appendChild(card);
+  });
+
+  updateCoverflow();
+}
+
+// Calcular y aplicar transformaciones 3D
+function updateCoverflow() {
+  const cards = Array.from(track.children);
+  const total = cards.length;
+
+  cards.forEach((card, i) => {
+    let rel = i - activeIndex;
+
+    // Cálculo de ciclo continuo (Loop)
+    if (rel > total / 2) rel -= total;
+    if (rel < -total / 2) rel += total;
+
+    const absRel = Math.abs(rel);
+    const isVisible = absRel <= CONFIG.maxVisible;
+    const isActive = rel === 0;
+
+    // Fórmulas de posicionamiento 3D
+    const scale = Math.max(0.4, 1 - absRel * CONFIG.scaleStep);
+    const tx = rel * (CONFIG.gap * 30);
+    const tz = -absRel * CONFIG.depth;
+    const ry = -rel * CONFIG.tilt;
+    const rz = rel * CONFIG.sideTilt;
+
+    // Transformación CSS
+    card.style.transform = `
+      translate(-50%, -50%) 
+      translateX(${tx}px) 
+      translateZ(${tz}px) 
+      rotateY(${ry}deg) 
+      rotateZ(${rz}deg) 
+      scale(${scale})
+    `;
+
+    // Visibilidad y controles de interacción
+    card.style.opacity = isVisible ? 1 : 0;
+    card.style.pointerEvents = isVisible ? 'auto' : 'none';
+    card.style.cursor = isActive ? 'default' : 'pointer';
+
+    // Manejo de la capa de atenuación/oscuridad
+    const dimmer = card.querySelector('.card-dimmer');
+    if (dimmer) {
+      dimmer.style.opacity = isActive ? 0 : CONFIG.dimOpacity;
+    }
+  });
+}
+
+// Bloqueo temporal para animaciones fluidas
+function lockTransition() {
+  isLocked = true;
+  setTimeout(() => {
+    isLocked = false;
+  }, 600); // Coincide con el tiempo de transición CSS (0.6s)
+}
+
+function handleCardClick(index) {
+  if (isLocked) return;
+  lockTransition();
+  
+  if (index === activeIndex) {
+    activeIndex = (activeIndex + 1) % SLIDES.length;
+  } else {
+    activeIndex = index;
+  }
+  updateCoverflow();
+}
+
+// Navegación con teclado (Flecha izquierda / derecha)
+container.addEventListener('keydown', (e) => {
+  if (isLocked) return;
+
+  if (e.key === 'ArrowRight') {
+    lockTransition();
+    activeIndex = (activeIndex + 1) % SLIDES.length;
+    updateCoverflow();
+  } else if (e.key === 'ArrowLeft') {
+    lockTransition();
+    activeIndex = (activeIndex - 1 + SLIDES.length) % SLIDES.length;
+    updateCoverflow();
+  }
+});
+
+// Renderizar al cargar la página
+document.addEventListener('DOMContentLoaded', initGallery);
