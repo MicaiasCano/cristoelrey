@@ -277,82 +277,7 @@
       font-size: 2rem;
     }
 
-    /* =========================
-       ANIMACIONES
-    ========================= */
 
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes cardReveal {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .card:nth-child(1) { animation-delay: 0.05s; }
-    .card:nth-child(2) { animation-delay: 0.1s; }
-    .card:nth-child(3) { animation-delay: 0.15s; }
-    .card:nth-child(4) { animation-delay: 0.2s; }
-    .card:nth-child(5) { animation-delay: 0.25s; }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 768px) {
-
-      body {
-        padding: 25px 20px 60px;
-      }
-
-      .hero {
-        margin-bottom: 15px;
-      }
-
-      .hero h1 {
-        font-size: 2.2rem;
-      }
-
-      .hero p {
-        font-size: 0.98rem;
-      }
-
-      .search-wrapper {
-        margin: 30px auto 40px;
-      }
-
-      .search-input {
-        padding: 18px 22px 18px 54px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        justify-content: center;
-        gap: 14px;
-        width: 100%;
-      }
-
-      .card {
-        max-width: 100%;
-      }
-
-      .card-content {
-        padding: 18px;
-      }
-
-    }
-
-    
 /* ==========================================================================
    7. WIDGET DE CHAT (BOTÓN FLOTANTE Y POPUP)
    ========================================================================== */
@@ -589,3 +514,91 @@
   transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
+
+    /* =========================
+       ANIMACIONES
+    ========================= */
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes cardReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.1s; }
+    .card:nth-child(3) { animation-delay: 0.15s; }
+    .card:nth-child(4) { animation-delay: 0.2s; }
+    .card:nth-child(5) { animation-delay: 0.25s; }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 768px) {
+
+      body {
+        padding: 25px 20px 60px;
+      }
+
+      .hero {
+        margin-bottom: 15px;
+      }
+
+      .hero h1 {
+        font-size: 1rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+      .footer {
+        font-size: 1.2rem;
+      }
+
+      .search-wrapper {
+        margin: 30px auto 40px;
+      }
+
+      .search-input {
+        padding: 18px 22px 18px 54px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: center;
+        gap: 14px;
+        width: 100%;
+      }
+
+      .card {
+        max-width: 100%;
+      }
+
+      .card-content {
+        padding: 18px;
+      }
+      .coverflow-container{
+        height: 250px;
+      }
+      .coverflow-track{
+        height: 250px;
+      }
+      .coverflow-track .card{
+        height: 200px;
+        width: 200px;
+      }
+    }
+    
