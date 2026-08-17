@@ -157,7 +157,7 @@ const recipes = [
     image: "img/Logo_Corona_Argentina.png",
     description: "Mendoza 550<br>Bahia Blanca<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes y Jueves: 20.00hs<br>S&aacute;bados: 19.30hs<br>Domingo: 9.30hs<br><br><b>Enc. de Obra:</b><br>Evangelista Gustavo Fernandez",
     link: "https://maps.app.goo.gl/GTvoXBkYjZzScqy18"
-  },
+  }, 
   {
     recipe: "BAHIA BLANCA",
     image: "img/Logo_Corona_Argentina.png",
