@@ -665,7 +665,7 @@ const SLIDES = [
   },
   {
     image: "./img/Bandera_Paraguay.jpg",
-    title: "Parauay"
+    title: "Paraguay"
   },
   {
     image: "./img/Bandera_Chile.jpg",
