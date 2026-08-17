@@ -81,7 +81,7 @@ a img {
 .hero hr {
   width: 100%;
   max-width: 1080px;
-  height: 2px;
+  height: 3px;
   margin: auto;
   border: none;
   background: linear-gradient(to right, transparent, #ffffff, transparent);
@@ -602,6 +602,7 @@ a img {
   
   /* Ajustes del Footer */
   .footer { font-size: 1.2rem; }
+  .footer hr{ height: 2px;}
 
   /* Ajustes del Buscador */
   .search-wrapper { margin: 30px auto 40px; }
