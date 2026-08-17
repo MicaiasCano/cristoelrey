@@ -296,7 +296,7 @@ a img {
   left: 50%;
   top: 50%;
   width: 400px;
-  height: 400px;
+  height: 267px;
   border-radius: var(--radius);
   overflow: hidden;
   transform-style: preserve-3d;
@@ -616,10 +616,10 @@ a img {
   .card-content { padding: 18px; }
 
   /* Ajustes de la Galería 3D (Coverflow) para que encaje en móviles */
-  .coverflow-container { height: 250px; }
-  .coverflow-track { height: 250px; }
+  .coverflow-container { height: 200px; }
+  .coverflow-track { height: 200px; }
   .coverflow-track .card {
-    height: 200px;
+    height: 134px;
     width: 200px;
   }
 }
