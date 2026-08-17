@@ -594,17 +594,15 @@ a img {
   body {
     padding: 25px 20px 60px;
   }
+   hr{ height: 2px; }
 
   /* Ajustes de tipografía del Hero */
   .hero { margin-bottom: 15px; }
   .hero h1 { font-size: 1rem; }
   .hero p { font-size: 0.9rem; }
-  .hero hr{ height: 2px; }
-
   
   /* Ajustes del Footer */
   .footer { font-size: 1.2rem; }
-  .footer hr{ height: 2px;}
 
   /* Ajustes del Buscador */
   .search-wrapper { margin: 30px auto 40px; }
