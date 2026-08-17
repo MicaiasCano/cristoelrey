@@ -227,7 +227,7 @@ const recipes = [
   {
     recipe: "CAÑETE",
     image: "img/Logo_Corona_Chile.png",
-    description: "Estero El Carmen s/n<br>Poblacion La Esperanza<br>Region Bio Bio<br>Comuna Ca&ntilde;ete<br>Chile<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes, Jueves, Sabado: 20.00hs<br>Domingo: 11.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Rodrigo Palma",
+    description: "Estero El Carmen s/n<br>Poblacion La Esperanza<br>Region Bio Bio<br>Comuna Ca&ntilde;ete<br>Chile<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes y Jueves: 20.00hs<br>Sabados: 19.00hs<br>Domingo: 11.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Rodrigo Palma",
     link: "https://www.google.com/maps/place/Iglesia+Evang%C3%A9lica+Pentecostal+Cristo+el+Rey/@-37.7977007,-73.3890128,17z/data=!3m1!4b1!4m6!3m5!1s0x966a0bafe3b33e07:0x4561df879a4ca5d9!8m2!3d-37.7977007!4d-73.3890128!16s%2Fg%2F11sb79p7xl?entry=ttu&g_ep=EgoyMDI1MDEyOS4xIKXMDSoASAFQAw%3D%3D"
   },
   {
@@ -757,12 +757,13 @@ function updateCoverflow() {
     const isVisible = absRel <= CONFIG.maxVisible;
     const isActive = rel === 0;
 
-    // Si la pantalla es de 768px o menos, usa 1600; si es más grande, usa 240 (o CONFIG.depth)
-    const currentDepth = window.innerWidth <= 768 ? 1600 : (CONFIG.depth || 240);
-    
+    // Si la pantalla es de 768px o menos
+    const currentDepth = window.innerWidth <= 768 ? 500 : (CONFIG.depth || 240);
+    const currentGap = window.innerWidth <= 768 ? 4 : (CONFIG.gap || 8);
+
     // Fórmulas de posicionamiento 3D
     const scale = Math.max(0.4, 1 - absRel * CONFIG.scaleStep);
-    const tx = rel * (CONFIG.gap * 30);
+    const tx = rel * (currentGap * 30);
     const tz = -absRel * currentDepth;
     const ry = -rel * CONFIG.tilt;
     const rz = rel * CONFIG.sideTilt;
