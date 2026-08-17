@@ -155,8 +155,8 @@ const recipes = [
   {
     recipe: "PUNTA ALTA",
     image: "img/Logo_Corona_Argentina.png",
-    description: "Dorrego 820<br>Bahia Blanca<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles, Sabado: 19.30hs<br>Domingo: 9.30hs<br><br><b>Enc. de Obra:</b><br>Evangelista Gustavo Fernandez",
-    link: "https://www.google.com/maps/place/Dorrego+820,+B8000+Bah%C3%ADa+Blanca,+Provincia+de+Buenos+Aires/@-38.7192307,-62.2573482,17z/data=!3m1!4b1!4m5!3m4!1s0x95eda34eb7f3d7b3:0xc802f0ee721fe073!8m2!3d-38.7192307!4d-62.2547733?entry=ttu&g_ep=EgoyMDI1MDEyOS4xIKXMDSoASAFQAw%3D%3D"
+    description: "Mendoza 550<br>Bahia Blanca<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes y Jueves: 20.00hs<br>S&aacute;bados: 19.30hs<br>Domingo: 9.30hs<br><br><b>Enc. de Obra:</b><br>Evangelista Gustavo Fernandez",
+    link: "https://maps.app.goo.gl/GTvoXBkYjZzScqy18"
   },
   {
     recipe: "BAHIA BLANCA",
@@ -505,7 +505,7 @@ const recipes = [
   {
     recipe: "PAMPA DE LOS GUANACOS",
     image: "img/Logo_Corona_Argentina.png",
-    description: "Av. San Martin<br>e/ San Lorenzo y Av. General Paz<br>San Martin<br>Prov. Santiago del Estero<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles: 20.00hs<br>Sabado, Domingo: 19.30hs<br><br><b>Enc. de Obra:</b><br>Hermano Esteban Lugo",
+    description: "Av. San Martin<br>e/ San Lorenzo y Av. General Paz<br>San Martin<br>Prov. Santiago del Estero<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles: 20.00hs<br>Sabado, Domingo: 19.30hs<br><br><b>Enc. de Obra:</b><br>Presbitero Lisandro David Lugo",
     link: "#"
   },
 
@@ -660,45 +660,21 @@ document.addEventListener('DOMContentLoaded', () => {
 // Configuración de datos
 const SLIDES = [
   {
-    image: "./img/Monte Castro.jpg",
-    title: "Monte Castro"
+    image: "./img/Bandera_Argentina.jpg",
+    title: "Argentina"
   },
   {
-    image: "./img/filial Adonai.jpg",
-    title: "Adonai"
+    image: "./img/Bandera_Paraguay.jpg",
+    title: "Parauay"
   },
   {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "Km 28"
+    image: "./img/Bandera_Chile.jpg",
+    title: "Chile"
   },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "Oro Verde"
-  },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "Isidro Casanova"
-  },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "Barrio la Loma"
-  },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "La Roca Sagrada es Cristo"
-  },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "San Jose Oeste"
-  },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "Quitilipi"
-  },
-  {
-    image: "./img/Logo_Corona_Argentina_Dorada.png",
-    title: "La Cumbre del Calvario"
-  }
+//  {
+//    image: "./img/Bandera_Peru.jpg",
+//    title: "Peru"
+//  }
 ];
 
 // Parámetros de la animación 3D
@@ -742,12 +718,13 @@ function initGallery() {
 }
 
 // Calcular y aplicar transformaciones 3D
-function updateCoverflow() {
+function updateCoverflow(dragOffset = 0, isDraggingStatus = false) {
   const cards = Array.from(track.children);
   const total = cards.length;
 
   cards.forEach((card, i) => {
-    let rel = i - activeIndex;
+    // MAGIA: Sumamos la posición activa con el movimiento del dedo en tiempo real
+    let rel = i - (activeIndex + dragOffset);
 
     // Cálculo de ciclo continuo (Loop)
     if (rel > total / 2) rel -= total;
@@ -755,18 +732,19 @@ function updateCoverflow() {
 
     const absRel = Math.abs(rel);
     const isVisible = absRel <= CONFIG.maxVisible;
-    const isActive = rel === 0;
+    const isActive = rel === 0 && dragOffset === 0;
 
-    // Si la pantalla es de 768px o menos
     const currentDepth = window.innerWidth <= 768 ? 500 : (CONFIG.depth || 240);
     const currentGap = window.innerWidth <= 768 ? 4 : (CONFIG.gap || 8);
 
-    // Fórmulas de posicionamiento 3D
     const scale = Math.max(0.4, 1 - absRel * CONFIG.scaleStep);
     const tx = rel * (currentGap * 30);
     const tz = -absRel * currentDepth;
     const ry = -rel * CONFIG.tilt;
     const rz = rel * CONFIG.sideTilt;
+
+    // APAGAR TRANSICIÓN CSS SI ESTÁ ARRASTRANDO (evita el lag del dedo)
+    card.style.transition = isDraggingStatus ? 'none' : '';
 
     // Transformación CSS
     card.style.transform = `
@@ -778,14 +756,13 @@ function updateCoverflow() {
       scale(${scale})
     `;
 
-    // Visibilidad y controles de interacción
     card.style.opacity = isVisible ? 1 : 0;
     card.style.pointerEvents = isVisible ? 'auto' : 'none';
     card.style.cursor = isActive ? 'default' : 'pointer';
 
-    // Manejo de la capa de atenuación/oscuridad
     const dimmer = card.querySelector('.card-dimmer');
     if (dimmer) {
+      dimmer.style.transition = isDraggingStatus ? 'none' : '';
       dimmer.style.opacity = isActive ? 0 : CONFIG.dimOpacity;
     }
   });
@@ -825,6 +802,78 @@ container.addEventListener('keydown', (e) => {
     updateCoverflow();
   }
 });
+// ==========================================
+// SOPORTE PARA DESLIZAR EN TIEMPO REAL (SWIPE/DRAG)
+// ==========================================
+let startX = 0;
+let isDragging = false;
+let dragOffset = 0;
+
+// Determina cuántos píxeles hay que arrastrar para pasar "1" tarjeta completa.
+// Usamos el 40% del ancho de la pantalla para que sea proporcional.
+const dragSensitivity = window.innerWidth * 0.4; 
+
+// Eventos táctiles (Móviles)
+container.addEventListener('touchstart', (e) => {
+  if (isLocked) return;
+  isDragging = true;
+  startX = e.touches[0].clientX;
+}, { passive: true });
+
+container.addEventListener('touchmove', (e) => {
+  if (!isDragging || isLocked) return;
+  const currentX = e.touches[0].clientX;
+  const diffX = startX - currentX; // Positivo si vas izq, negativo si vas der
+  
+  // Convertimos los píxeles a "porcentaje de tarjeta" (ej: 0.5 es media tarjeta)
+  dragOffset = diffX / dragSensitivity;
+  
+  // Actualizamos la galería en tiempo real sin animaciones CSS
+  updateCoverflow(dragOffset, true);
+}, { passive: true });
+
+container.addEventListener('touchend', finalizarDeslizamiento);
+
+// Eventos de mouse (Computadoras)
+container.addEventListener('mousedown', (e) => {
+  if (isLocked) return;
+  isDragging = true;
+  startX = e.clientX;
+  container.style.cursor = 'grabbing';
+});
+
+container.addEventListener('mousemove', (e) => {
+  if (!isDragging || isLocked) return;
+  const currentX = e.clientX;
+  const diffX = startX - currentX;
+  
+  dragOffset = diffX / dragSensitivity;
+  updateCoverflow(dragOffset, true);
+});
+
+container.addEventListener('mouseup', finalizarDeslizamiento);
+container.addEventListener('mouseleave', () => {
+  if (isDragging) finalizarDeslizamiento();
+});
+
+// Función para soltar la tarjeta
+function finalizarDeslizamiento() {
+  if (!isDragging) return;
+  isDragging = false;
+  container.style.cursor = 'default';
+
+  // Si arrastró más del 25% (0.25) cambiamos de tarjeta definitivamente
+  if (dragOffset > 0.25) {
+    activeIndex = (activeIndex + 1) % SLIDES.length;
+  } else if (dragOffset < -0.25) {
+    activeIndex = (activeIndex - 1 + SLIDES.length) % SLIDES.length;
+  }
+
+  // Reiniciamos el offset a 0 y devolvemos la transición de CSS (false)
+  dragOffset = 0;
+  lockTransition(); // Bloquea clics rápidos mientras termina de animar
+  updateCoverflow(0, false);
+}
 
 // Renderizar al cargar la página
 document.addEventListener('DOMContentLoaded', initGallery);
