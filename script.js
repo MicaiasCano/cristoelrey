@@ -11,7 +11,8 @@ const recipes = [
     image: "./img/filial Adonai.jpg",
     description: "Cazon 6675<br>(e/ Chopin y Chasaing)<br>Gregorio de Laferrere<br>Prov. Buenos Aires. Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles, Viernes:<br>19.00hs<br>Domingo:<br>18.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Ernesto Villan",
     link: "https://maps.app.goo.gl/6zUkHvaf9g7C6wz17",
-  },{
+  },
+  {
     recipe: "Km 28",
     image: "img/Logo_Corona_Argentina_Dorada.png",
     description: "Calle del Tejar 2360<br>Bº 17 De Octubre<br>Rafael Castillo<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles, Sabado: 19.00hs<br>Domingo: 18.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Rodolfo Herrera",
