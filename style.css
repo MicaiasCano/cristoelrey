@@ -1,288 +1,371 @@
-
-
-    :root {
-      --bg: #0f1115;
-      --card: rgba(255,255,255,0.06);
-      --card-border: rgba(255,255,255,0.08);
-      --text: #ffffff;
-      --muted: #b8bcc8;
-      --accent: #7c5cff;
-      --shadow: 0 10px 40px rgba(0,0,0,0.35);
-      --radius: 22px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      overflow-x: hidden;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(124,92,255,0.25), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(0,255,209,0.12), transparent 25%),
-        var(--bg);
-      color: var(--text);
-      width: 100%;
-      max-width: 100vw;
-      min-height: 100vh;
-      padding: 40px 20px 80px;
-      overflow-x: hidden;
-    }
-
-    /* =========================
-       CONTENEDOR GENERAL
-    ========================= */
-
-    .container {
-      width: 90vw;
-      max-width: 1920px;
-      margin: 0 auto;
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-    a img{
-      width: 100%;
-      max-width: 720px;
-      height: auto;
-    }
-    .hero {
-      text-align: center;
-      margin-bottom: 10px;
-      animation: fadeUp 0.8s ease;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      font-weight: 700;
-      letter-spacing: -0.05em;
-      margin-bottom: 15px;
-      line-height: 1;
-    }
-
-    .hero p {
-      color: var(--muted);
-      max-width: 700px;
-      margin: auto;
-      line-height: 1.7;
-      font-size: 1.8rem;
-    }
-
-    /* =========================
-       BUSCADOR
-    ========================= */
-
-    .search-wrapper {
-      width: 100%;
-      max-width: 620px;
-      margin: 40px auto 60px;
-      position: relative;
-      animation: fadeUp 1s ease;
-    }
-
-    .search-wrapper svg {
-      position: absolute;
-      left: 22px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 20px 24px 20px 58px;
-      border-radius: 100px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.07);
-      backdrop-filter: blur(14px);
-      color: white;
-      font-size: 1rem;
-      outline: none;
-      transition: all 0.3s ease;
-      box-shadow: var(--shadow);
-    }
-
-    .search-input::placeholder {
-      color: rgba(255,255,255,0.5);
-    }
-
-    .search-input:focus {
-      border-color: rgba(124,92,255,0.8);
-      background: rgba(255,255,255,0.09);
-      transform: translateY(-2px);
-      box-shadow:
-        0 0 0 4px rgba(124,92,255,0.15),
-        var(--shadow);
-    }
-
-    /* =========================
-       GRID
-    ========================= */
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      justify-content: center;
-      align-content: start;
-      gap: 22px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    /* =========================
-       CARD
-    ========================= */
-
-    .card {
-      width: 100%;
-      max-width: 260px;
-      margin: 0 auto;
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-      transition:
-        transform 0.35s ease,
-        border-color 0.35s ease,
-        box-shadow 0.35s ease;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow);
-      opacity: 0;
-      transform: translateY(40px);
-      animation: cardReveal 0.7s forwards;
-    }
-
-    .card:hover {
-      transform: translateY(-10px);
-      border-color: rgba(124,92,255,0.4);
-      box-shadow:
-        0 20px 60px rgba(0,0,0,0.45),
-        0 0 40px rgba(124,92,255,0.15);
-    }
-
-    .card-image-wrapper {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card img {
-      width: 100%;
-      /*aspect-ratio: 10 / 10;*/
-      object-fit: cover;
-      display: block;
-      transition: transform 0.8s ease;
-    }
-
-    .card:hover img {
-      transform: scale(1.08);
-    }
-
-    .card-gradient {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.45), transparent 50%);
-      pointer-events: none;
-    }
-
-    .card-content {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .card-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-      letter-spacing: -0.03em;
-      text-align: center;
-    }
-
-    .card-description {
-      color: var(--muted);
-      line-height: 1.4;
-      margin-bottom: 22px;
-      flex-grow: 1;
-      font-size: 0.82rem;
-      text-align: center;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin: auto;
-    }
-
-    .card-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), #5b8cff);
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      transition:
-        transform 0.25s ease,
-        opacity 0.25s ease;
-    }
-
-    .card-button:hover {
-      transform: translateY(-2px);
-      opacity: 0.92;
-    }
-
-
-
-    /* =========================
-       EMPTY STATE
-    ========================= */
-
-    .empty-state {
-      display: none;
-      text-align: center;
-      margin-top: 80px;
-      color: var(--muted);
-      font-size: 1rem;
-      animation: fadeUp 0.4s ease;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    .footer {
-      margin-top: 90px;
-      text-align: center;
-      color: rgba(255,255,255,0.35);
-      font-size: 2rem;
-    }
-
+/* ==========================================================================
+   1. VARIABLES GLOBALES (Design Tokens)
+   ========================================================================== */
+:root {
+  --bg: #0f1115;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text: #ffffff;
+  --muted: #b8bcc8;
+  --accent: #7c5cff;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --radius: 22px;
+}
 
 /* ==========================================================================
-   7. WIDGET DE CHAT (BOTÓN FLOTANTE Y POPUP)
+   2. RESET Y ESTILOS BASE
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+html {
+  scroll-behavior: smooth; /* Desplazamiento suave entre anclas */
+  overflow-x: hidden; /* Evita scroll horizontal no deseado */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(124, 92, 255, 0.25), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(0, 255, 209, 0.12), transparent 25%),
+    var(--bg);
+  color: var(--text);
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  overflow-x: hidden;
+}
+
+/* Contenedor principal para limitar el ancho máximo en pantallas grandes */
+.container {
+  width: 90vw;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   3. SECCIÓN HERO (Encabezado principal)
+   ========================================================================== */
+a img {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 10px;
+  animation: fadeUp 0.8s ease; /* Animación de entrada */
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 6vw, 5rem); /* Texto responsivo fluido */
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  margin-bottom: 15px;
+  line-height: 1;
+}
+
+.hero p {
+  color: var(--muted);
+  max-width: 700px;
+  margin: auto;
+  line-height: 1.7;
+  font-size: 1.8rem;
+}
+
+.hero hr {
+  width: 100%;
+  max-width: 1080px;
+  height: 2px;
+  margin: auto;
+  border: none;
+  background: linear-gradient(to right, transparent, #ffffff, transparent);
+}
+
+/* ==========================================================================
+   4. COMPONENTE DE BÚSQUEDA
+   ========================================================================== */
+.search-wrapper {
+  width: 100%;
+  max-width: 620px;
+  margin: 40px auto 60px;
+  position: relative;
+  animation: fadeUp 1s ease;
+}
+
+/* Icono de la lupa dentro del buscador */
+.search-wrapper svg {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+  pointer-events: none; /* Evita que el SVG bloquee el clic en el input */
+}
+
+.search-input {
+  width: 100%;
+  padding: 20px 24px 20px 58px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px); /* Efecto Glassmorphism */
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-input:focus {
+  border-color: rgba(124, 92, 255, 0.8);
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 4px rgba(124, 92, 255, 0.15),
+    var(--shadow);
+}
+
+/* ==========================================================================
+   5. SISTEMA DE GRILLA (Grid)
+   ========================================================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columnas adaptables */
+  justify-content: center;
+  align-content: start;
+  gap: 22px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   6. TARJETAS (Cards)
+   ========================================================================== */
+.card {
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  backdrop-filter: blur(12px); /* Efecto Glassmorphism */
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(40px);
+  animation: cardReveal 0.7s forwards;
+}
+
+/* Efecto hover en la tarjeta completa */
+.card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 0 40px rgba(124, 92, 255, 0.15);
+}
+
+.card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s ease; /* Transición suave para el zoom */
+}
+
+/* Zoom a la imagen al hacer hover sobre la tarjeta */
+.card:hover img {
+  transform: scale(1.08);
+}
+
+/* Sombreado interno sobre la imagen de la tarjeta */
+.card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 50%);
+  pointer-events: none;
+}
+
+.card-content {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Permite que el contenido ocupe el espacio disponible */
+}
+
+.card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+
+.card-description {
+  color: var(--muted);
+  line-height: 1.4;
+  margin-bottom: 22px;
+  flex-grow: 1;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin: auto;
+}
+
+.card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), #5b8cff);
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.card-button:hover {
+  transform: translateY(-2px);
+  opacity: 0.92;
+}
+
+/* Retrasos secuenciales para la entrada de las tarjetas */
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.2s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ==========================================================================
+   7. GALERÍA 3D (Coverflow Gallery)
+   ========================================================================== */
+.coverflow-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  min-width: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1600px; /* Profundidad 3D */
+  overflow: hidden;
+  outline: none;
+}
+
+.coverflow-track {
+  position: relative;
+  width: auto;
+  height: 400px;
+  transform-style: preserve-3d;
+}
+
+/* Ajustes específicos para las tarjetas dentro del Coverflow */
+.coverflow-track .card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 400px;
+  height: 400px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  transition: 
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), 
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  max-width: none; /* Anula ancho máximo del card standard */
+  margin: 0;
+  animation: none; /* Anula la animación de entrada standard */
+  container-type: inline-size;
+}
+
+.coverflow-track .card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  pointer-events: none;
+  margin: auto;
+}
+
+/* Sombra oscura sobre el texto en las tarjetas de la galería */
+.coverflow-track .card-gradient {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.coverflow-track .card-title {
+  position: absolute;
+  bottom: 1rem;            
+  left: 50%;                
+  transform: translateX(-50%);
+  width: 90%;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Trunca a 2 líneas */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+  font-size: clamp(0.8rem, 8cqw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  margin-bottom: 0;
+  z-index: 2;
+}
+
+/* Capa de oscurecimiento para tarjetas no activas en el 3D */
+.card-dimmer {
+  position: absolute;
+  inset: 0;
+  background-color: #000000;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   8. WIDGET DE CHAT (Botón flotante y ventana modal)
    ========================================================================== */
 
-/* Botón Flotante Principal */
+/* Botón flotante principal */
 .chat-widget-btn {
   position: fixed;
   bottom: 20px;
@@ -297,12 +380,11 @@
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  z-index: 9999;
+  z-index: 9999; /* Asegura que esté por encima de todo */
   transition: transform 0.2s ease, background-color 0.2s ease;
-  overflow: hidden; /* Evita desbordamiento del icono */
+  overflow: hidden;
 }
 
-/* Icono SVG del Botón Flotante */
 .chat-widget-btn svg {
   width: 32px;
   height: 32px;
@@ -313,7 +395,7 @@
   transform: scale(1.08);
 }
 
-/* Ventana Modal / Popup del Chat */
+/* Ventana modal / Popup del Chat */
 .chat-widget-popup {
   position: fixed;
   bottom: 90px;
@@ -323,14 +405,13 @@
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  display: none; /* Oculto por defecto mediante JavaScript */
+  display: none; /* Oculto por defecto, se maneja con JS (.active) */
   flex-direction: column;
   z-index: 9999;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   animation: chatFadeIn 0.25s ease-out;
 }
 
-/* Estado activo del Popup (Mostrar) */
 .chat-widget-popup.active {
   display: flex;
 }
@@ -356,7 +437,7 @@
   opacity: 0.9;
 }
 
-/* Cuerpo y Lista de Contactos */
+/* Cuerpo del chat (Lista de contactos) */
 .chat-widget-body {
   padding: 12px;
   display: flex;
@@ -379,7 +460,7 @@
   background-color: #e9ecef;
 }
 
-/* Avatares e Imágenes de Contactos */
+/* Avatares de los contactos */
 .chat-contact-avatar {
   width: 55px;
   height: 55px;
@@ -397,7 +478,7 @@
   height: 34px;
 }
 
-/* Información del Contacto */
+/* Textos del contacto */
 .chat-contact-info {
   display: flex;
   flex-direction: column;
@@ -413,7 +494,87 @@
   color: #666666;
 }
 
-/* Animaciones */
+/* ==========================================================================
+   9. ESTADOS Y COMPONENTES SECUNDARIOS (Empty State)
+   ========================================================================== */
+.empty-state {
+  display: none; /* Oculto por defecto */
+  text-align: center;
+  margin-top: 80px;
+  color: var(--muted);
+  font-size: 1rem;
+  animation: fadeUp 0.4s ease;
+}
+
+/* ==========================================================================
+   10. FOOTER (Pie de página)
+   ========================================================================== */
+.footer {
+  margin-top: 90px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 2rem;
+}
+
+.footer hr {
+  width: 100%;
+  max-width: 1080px;
+  height: 2px;
+  margin: auto;
+  border: none;
+  background: linear-gradient(to right, transparent, #8c8c88, transparent);
+}
+
+.footer img {
+  width: 480px; 
+  max-width: 100%;
+  margin: auto;
+  cursor: pointer;
+}
+
+.footer strong {
+  font-size: 100%;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 20px;
+}
+
+/* Enlaces del footer */
+.fa2 {
+  color: #008afa;
+  text-decoration: none;
+  font-size: 75%;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.fa2:hover {
+  color: #2a6496;
+  text-decoration: underline;
+  margin: auto;
+}
+
+/* ==========================================================================
+   11. ANIMACIONES GLOBALES (Keyframes)
+   ========================================================================== */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes chatFadeIn {
   from {
     opacity: 0;
@@ -425,180 +586,40 @@
   }
 }
 
-
-
 /* ==========================================================================
-   5. COVERFLOW GALLERY 3D (NUEVA SECCIÓN INTEGRADA)
+   12. DISEÑO RESPONSIVO (Media Queries)
    ========================================================================== */
-.coverflow-container {
-  position: relative;
-  width: 100%;
-  height: 500px;
-  min-width: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 1600px;
-  overflow: hidden;
-  outline: none;
-  margin: 40px 0;
+@media (max-width: 768px) {
+  /* Ajustes generales para móviles */
+  body {
+    padding: 25px 20px 60px;
+  }
+
+  /* Ajustes de tipografía del Hero */
+  .hero { margin-bottom: 15px; }
+  .hero h1 { font-size: 1rem; }
+  .hero p { font-size: 1rem; }
+  
+  /* Ajustes del Footer */
+  .footer { font-size: 1.2rem; }
+
+  /* Ajustes del Buscador */
+  .search-wrapper { margin: 30px auto 40px; }
+  .search-input { padding: 18px 22px 18px 54px; }
+
+  /* Ajustes de Grilla y Tarjetas: Pasa de columnas fluidas a 2 columnas fijas */
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .card { max-width: 100%; }
+  .card-content { padding: 18px; }
+
+  /* Ajustes de la Galería 3D (Coverflow) para que encaje en móviles */
+  .coverflow-container { height: 250px; }
+  .coverflow-track { height: 250px; }
+  .coverflow-track .card {
+    height: 200px;
+    width: 200px;
+  }
 }
-
-.coverflow-track {
-  position: relative;
-  width: 400px;
-  height: 400px;
-  transform-style: preserve-3d;
-}
-
-/* Tarjeta 3D del Coverflow */
-.coverflow-track .card {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 400px;
-  height: 400px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  transform-style: preserve-3d;
-  transform-origin: center center;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), 
-              opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  border: 1px solid var(--card-border);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  user-select: none;
-  /* Anulamos propiedades del grid standard */
-  max-width: none;
-  margin: 0;
-  animation: none;
-}
-
-.coverflow-track .card img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  pointer-events: none;
-  margin: auto;
-}
-
-.card-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
-}
-
-.coverflow-track .card-title {
-  position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 24px;
-  color: var(--text);
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  white-space: pre-line;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-  text-align: left;
-  margin-bottom: 0;
-}
-
-.card-dimmer {
-  position: absolute;
-  inset: 0;
-  background-color: #000000;
-  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-}
-
-    /* =========================
-       ANIMACIONES
-    ========================= */
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes cardReveal {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .card:nth-child(1) { animation-delay: 0.05s; }
-    .card:nth-child(2) { animation-delay: 0.1s; }
-    .card:nth-child(3) { animation-delay: 0.15s; }
-    .card:nth-child(4) { animation-delay: 0.2s; }
-    .card:nth-child(5) { animation-delay: 0.25s; }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 768px) {
-
-      body {
-        padding: 25px 20px 60px;
-      }
-
-      .hero {
-        margin-bottom: 15px;
-      }
-
-      .hero h1 {
-        font-size: 1rem;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-      .footer {
-        font-size: 1.2rem;
-      }
-
-      .search-wrapper {
-        margin: 30px auto 40px;
-      }
-
-      .search-input {
-        padding: 18px 22px 18px 54px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        justify-content: center;
-        gap: 14px;
-        width: 100%;
-      }
-
-      .card {
-        max-width: 100%;
-      }
-
-      .card-content {
-        padding: 18px;
-      }
-      .coverflow-container{
-        height: 250px;
-      }
-      .coverflow-track{
-        height: 250px;
-      }
-      .coverflow-track .card{
-        height: 200px;
-        width: 200px;
-      }
-    }
-    
