@@ -10,7 +10,7 @@ const recipes = [
     recipe: "ADONAI",
     image: "./img/filial Adonai.jpg",
     description: "Cazon 6675<br>(e/ Chopin y Chasaing)<br>Gregorio de Laferrere<br>Prov. Buenos Aires. Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles, Viernes:<br>19.00hs<br>Domingo:<br>18.00hs<br><br><b>Enc. de Obra:</b><br>Pastor Ernesto Villan",
-    link: "https://maps.app.goo.gl/8o6NPLMM4PMuAkdA7",
+    link: "https://maps.app.goo.gl/6zUkHvaf9g7C6wz17",
   },{
     recipe: "Km 28",
     image: "img/Logo_Corona_Argentina_Dorada.png",
@@ -157,7 +157,7 @@ const recipes = [
     image: "img/Logo_Corona_Argentina.png",
     description: "Mendoza 550<br>Bahia Blanca<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes y Jueves: 20.00hs<br>S&aacute;bados: 19.30hs<br>Domingo: 9.30hs<br><br><b>Enc. de Obra:</b><br>Evangelista Gustavo Fernandez",
     link: "https://maps.app.goo.gl/GTvoXBkYjZzScqy18"
-  }, 
+  },
   {
     recipe: "BAHIA BLANCA",
     image: "img/Logo_Corona_Argentina.png",
@@ -223,6 +223,12 @@ const recipes = [
     image: "img/Logo_Corona_Paraguay.png",
     description: "Ucrania y Capitan Miranda<br>Dpto. Itapu&aacute;<br>fraccionamiento Lopoja<br>Manzana 15<br>Paraguay<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes y Jueves: 19.30hs<br>Sabado: 19.00hs<br>Domingo: 9.00hs<br><br><b>Enc. de Obra:</b><br>Presbitero Esteban Narvaez",
     link: "https://www.google.com/maps/place/27%C2%B014'12.9%22S+55%C2%B048'10.4%22W/@-27.236914,-55.8054709,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-27.236914!4d-55.802896?hl=es&entry=ttu&g_ep=EgoyMDI1MDIwNS4xIKXMDSoASAFQAw%3D%3D"
+  },
+  {
+    recipe: "TOMAS ROMERO PEREIRA",
+    image: "img/Logo_Corona_Paraguay.png",
+    description: "Av. Los Colonos Km 42<br>Barrio Mar&iacute;a Auxialiadora<br>Distrito Tom&aacute;s Romero Pereira<br>Paraguay<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Miercoles: 19.00hs<br>Sabados y Domingos: 18.00hs<br><br><b>Enc. de Obra:</b><br>Presbitero Esteban Narvaez",
+    link: "https://maps.app.goo.gl/LN2NKkBmuEE67x3E8"
   },
   {
     recipe: "CAÑETE",
@@ -530,9 +536,13 @@ const recipes = [
     description: "Antequera 2965<br>(e/Luj&aacute;n y Alag&oacute;n)<br>Gonz&aacute;lez Cat&aacute;n<br>Prov. Buenos Aires<br>Argentina<br><br><b>D&iacute;as de Reuni&oacute;n</b><br>Martes, Jueves,<br>Sabado: 19.30hs<br><br><b>Enc. de Obra:</b><br>Prebistero Ramon Martinez",
     link: "https://www.google.com/maps/place/Antequera+2965,+B1759+Gonz%C3%A1lez+Cat%C3%A1n,+Provincia+de+Buenos+Aires/@-34.7482329,-58.6406557,17z/data=!3m1!4b1!4m5!3m4!1s0x95bcc40b8e2d21dd:0x146fd90621de73ef!8m2!3d-34.7482329!4d-58.6406557?entry=ttu&g_ep=EgoyMDI1MDgyNS4wIKXMDSoASAFQAw%3D%3D"
   },
-];/* ==========================================
-   1. REFERENCIAS AL DOM
-   ========================================== */
+];
+
+/* =====================================================================
+   1. LA CAJA DE HERRAMIENTAS (Variables, Configuraciones y Referencias)
+   ===================================================================== */
+
+// Traemos los elementos del DOM para tenerlos a mano y no buscarlos a cada rato
 const DOM = {
   recipeGrid: document.getElementById('recipeGrid'),
   searchInput: document.getElementById('searchInput'),
@@ -541,18 +551,257 @@ const DOM = {
   chatPopup: document.getElementById('chatWidgetPopup')
 };
 
-/* ==========================================
-   2. UTILIDADES
-   ========================================== */
+// Data para las banderitas del carrusel 
+const SLIDES = [
+  { image: "./img/Bandera_Argentina.jpg", title: "Argentina" },
+  { image: "./img/Bandera_Paraguay.jpg", title: "Paraguay" },
+  { image: "./img/Bandera_Chile.jpg", title: "Chile" }
+  // { image: "./img/Bandera_Peru.jpg", title: "Peru" }
+];
+
+// Seteos para que la animación 3D quede flama
+const CONFIG = {
+  gap: 8,          // Distancia a lo ancho entre tarjetas
+  tilt: 12,        // Inclinación eje Y (para que se vea de costadito)
+  sideTilt: 8,     // Inclinación eje Z (le da ese toque rebelde)
+  depth: 240,      // Qué tan al fondo se van las tarjetas
+  scaleStep: 0.16, // Cuánto se achican las que están atrás
+  maxVisible: 2,   // Cuántas se ven a los costados
+  dimOpacity: 0.4  // Opacidad para oscurecer las inactivas
+};
+
+// Variables de estado (para saber en qué anda el usuario)
+let activeIndex = 0;       // Qué bandera está al medio
+let isLocked = false;      // Para frenar el código y que no se buguee la transición
+
+// Variables para atajar los dedos en el celular (Swipe/Drag)
+let startX = 0;
+let isDragging = false;
+let dragOffset = 0;
+// Calculamos el 40% de la pantalla para saber cuándo cambiar de tarjeta
+const dragSensitivity = window.innerWidth * 0.4;
+
+// Referencias del carrusel (Ojo: asegurate de que el script cargue al final del body)
+const container = document.querySelector('.coverflow-container');
+const track = document.getElementById('coverflowTrack');
+
+
+/* =====================================================================
+   2. FUNCIONES SALVAVIDAS (Utilidades varias)
+   ===================================================================== */
+
+// Chequea si el chabón nos está mirando desde un celu
 const isMobileUserAgent = () =>
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+// Para ver si lo que escribió en el buscador coincide con la data
 const fieldIncludes = (fieldValue, query) =>
   fieldValue ? fieldValue.toLowerCase().includes(query) : false;
 
-/* ==========================================
-   3. RENDERIZADO DE RECETAS
-   ========================================== */
+// Esta magia agarra el nombre del país y se lo enchufa al buscador
+function actualizarBuscador(texto) {
+  if (DOM.searchInput) {
+    DOM.searchInput.value = texto;
+    DOM.searchInput.dispatchEvent(new Event('input')); // Simulamos que el usuario tecleó
+  }
+}
+
+// Frena los clics a lo loco por medio segundo para darle respiro al CSS
+function lockTransition() {
+  isLocked = true;
+  setTimeout(() => { isLocked = false; }, 600); 
+}
+
+
+/* =====================================================================
+   3. TODA LA LÓGICA DEL CARRUSEL 3D (Banderas)
+   ===================================================================== */
+
+// Arrancamos la galería y metemos las tarjetas al HTML
+function initGallery() {
+  if (!track) return;
+  track.innerHTML = '';
+  
+  SLIDES.forEach((slide, index) => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.setAttribute('data-index', index);
+    
+    // Le armamos el esqueleto a la tarjeta
+    card.innerHTML = `
+      <img src="${slide.image}" alt="${slide.title}">
+      <div class="card-gradient"></div>
+      <div class="card-title">${slide.title}</div>
+      <div class="card-dimmer"></div>
+    `;
+    
+    // Si la tocan, llamamos a la función
+    card.addEventListener('click', () => handleCardClick(index));
+    track.appendChild(card);
+  });
+
+  updateCoverflow(); // Acomodamos todo en su lugar
+}
+
+// Esta es la que hace la matemática pesada para mover las tarjetas
+function updateCoverflow(dragOffset = 0, isDraggingStatus = false) {
+  if (!track) return;
+  const cards = Array.from(track.children);
+  const total = cards.length;
+
+  cards.forEach((card, i) => {
+    // Calculamos dónde está parada esta tarjeta respecto al centro
+    let rel = i - (activeIndex + dragOffset);
+
+    // Hacemos que el carrusel sea infinito (modo calesita)
+    if (rel > total / 2) rel -= total;
+    if (rel < -total / 2) rel += total;
+
+    const absRel = Math.abs(rel);
+    const isVisible = absRel <= CONFIG.maxVisible;
+    const isActive = rel === 0 && dragOffset === 0;
+
+    // Si es celu, achicamos un toque los márgenes y la profundidad
+    const currentDepth = window.innerWidth <= 768 ? 500 : (CONFIG.depth || 240);
+    const currentGap = window.innerWidth <= 768 ? 4 : (CONFIG.gap || 8);
+
+    const scale = Math.max(0.4, 1 - absRel * CONFIG.scaleStep);
+    const tx = rel * (currentGap * 30);
+    const tz = -absRel * currentDepth;
+    const ry = -rel * CONFIG.tilt;
+    const rz = rel * CONFIG.sideTilt;
+
+    // Si el loco está arrastrando con el dedo, apagamos la transición CSS
+    card.style.transition = isDraggingStatus ? 'none' : '';
+
+    // Le inyectamos los estilos
+    card.style.transform = `
+      translate(-50%, -50%) 
+      translateX(${tx}px) 
+      translateZ(${tz}px) 
+      rotateY(${ry}deg) 
+      rotateZ(${rz}deg) 
+      scale(${scale})
+    `;
+
+    card.style.opacity = isVisible ? 1 : 0;
+    card.style.pointerEvents = isVisible ? 'auto' : 'none';
+    card.style.cursor = isActive ? 'pointer' : 'default';
+
+    const dimmer = card.querySelector('.card-dimmer');
+    if (dimmer) {
+      dimmer.style.transition = isDraggingStatus ? 'none' : '';
+      dimmer.style.opacity = isActive ? 0 : CONFIG.dimOpacity;
+    }
+  });
+}
+
+// ¿Qué pasa cuando hacemos clic en una tarjeta?
+function handleCardClick(index) {
+  if (isLocked) return;
+  
+  if (index === activeIndex) {
+    // Si tocó la del medio, mandamos la orden al buscador y a otra cosa mariposa
+    actualizarBuscador(SLIDES[activeIndex].title);
+  } else {
+    // Si tocó una de los costados, la traemos para el centro
+    lockTransition();
+    activeIndex = index;
+    updateCoverflow();
+  }
+}
+
+// Cuando el usuario suelta la tarjeta (sea mouse o dedo)
+function finalizarDeslizamiento() {
+  if (!isDragging) return;
+  isDragging = false;
+  if(container) container.style.cursor = 'default';
+
+  // Nos fijamos cuánto la movió para saber si pasamos de tarjeta o no
+  const movimiento = Math.abs(dragOffset);
+
+  if (dragOffset > 0.25) {
+    activeIndex = (activeIndex + 1) % SLIDES.length;
+  } else if (dragOffset < -0.25) {
+    activeIndex = (activeIndex - 1 + SLIDES.length) % SLIDES.length;
+  }
+
+  // Dejamos la tarjeta acomodada en el centro
+  dragOffset = 0;
+  updateCoverflow(0, false);
+
+  // LA POSTA: Si fue un dedazo (casi ni se movió), no bloqueamos nada
+  // Así el evento de clic funciona de diez
+  if (movimiento > 0.05) {
+    lockTransition(); 
+  }
+}
+
+
+/* =====================================================================
+   4. MANEJANDO EL TECLADO Y LOS DEDOS (Event Listeners del Coverflow)
+   ===================================================================== */
+   
+if (container) {
+  // Flechitas del teclado (para los de escritorio)
+  container.addEventListener('keydown', (e) => {
+    if (isLocked) return;
+    if (e.key === 'ArrowRight') {
+      lockTransition();
+      activeIndex = (activeIndex + 1) % SLIDES.length;
+      updateCoverflow();
+    } else if (e.key === 'ArrowLeft') {
+      lockTransition();
+      activeIndex = (activeIndex - 1 + SLIDES.length) % SLIDES.length;
+      updateCoverflow();
+    }
+  });
+
+  // Celulares (Touch)
+  container.addEventListener('touchstart', (e) => {
+    if (isLocked) return;
+    isDragging = true;
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  container.addEventListener('touchmove', (e) => {
+    if (!isDragging || isLocked) return;
+    const currentX = e.touches[0].clientX;
+    const diffX = startX - currentX; 
+    dragOffset = diffX / dragSensitivity;
+    updateCoverflow(dragOffset, true);
+  }, { passive: true });
+
+  container.addEventListener('touchend', finalizarDeslizamiento);
+
+  // Computadoras (Mouse)
+  container.addEventListener('mousedown', (e) => {
+    if (isLocked) return;
+    isDragging = true;
+    startX = e.clientX;
+    container.style.cursor = 'grabbing'; // Manito cerrada
+  });
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDragging || isLocked) return;
+    const currentX = e.clientX;
+    const diffX = startX - currentX;
+    dragOffset = diffX / dragSensitivity;
+    updateCoverflow(dragOffset, true);
+  });
+
+  container.addEventListener('mouseup', finalizarDeslizamiento);
+  container.addEventListener('mouseleave', () => {
+    if (isDragging) finalizarDeslizamiento(); // Por si se escapa del div
+  });
+}
+
+
+/* =====================================================================
+   5. RENDERIZADO DE LAS SUCURSALES Y BÚSQUEDA (El buscador groso)
+   ===================================================================== */
+
+// Armamos el molde de la sucursal/receta
 function createCardElement(recipe) {
   const card = document.createElement('article');
   card.className = 'card';
@@ -574,18 +823,20 @@ function createCardElement(recipe) {
   return card;
 }
 
+// Pintamos las sucursales en la grilla del HTML
 function renderRecipes(filteredRecipes = []) {
   if (!DOM.recipeGrid) return;
 
   DOM.recipeGrid.innerHTML = '';
   const isEmpty = filteredRecipes.length === 0;
 
+  // Si no hay resultados, mostramos el mensajito de que no se encontró nada
   if (DOM.emptyState) {
     DOM.emptyState.style.display = isEmpty ? 'block' : 'none';
   }
-
   if (isEmpty) return;
 
+  // Usamos un Fragment para meter todo junto al final y no laggear la compu
   const fragment = document.createDocumentFragment();
   filteredRecipes.forEach(recipe => {
     fragment.appendChild(createCardElement(recipe));
@@ -594,14 +845,14 @@ function renderRecipes(filteredRecipes = []) {
   DOM.recipeGrid.appendChild(fragment);
 }
 
-/* ==========================================
-   4. LÓGICA DE BÚSQUEDA
-   ========================================== */
+// Cuando el loco escribe algo en la barra
 function handleSearch(e) {
   const query = e.target.value.toLowerCase().trim();
 
+  // Si no hay data todavía, no hacemos nada
   if (typeof recipes === 'undefined') return;
 
+  // Filtramos como unos campeones
   const filtered = recipes.filter(recipe =>
     fieldIncludes(recipe.recipe, query) ||
     fieldIncludes(recipe.description, query) ||
@@ -611,27 +862,31 @@ function handleSearch(e) {
   renderRecipes(filtered);
 }
 
-/* ==========================================
-   5. WIDGET DE CHAT
-   ========================================== */
+
+/* =====================================================================
+   6. WIDGET DE CHAT (El botoncito para tirar un mensaje)
+   ===================================================================== */
+
 function initChatWidget() {
   const { chatBtn, chatPopup } = DOM;
-
   if (!chatBtn || !chatPopup) return;
 
   const isMobile = isMobileUserAgent();
 
+  // Dependiendo si está en celu o PC, le asignamos el link de WhatsApp / Chat
   const links = chatPopup.querySelectorAll('[data-desktop][data-mobile]');
   links.forEach(link => {
     const targetUrl = link.getAttribute(isMobile ? 'data-mobile' : 'data-desktop');
     if (targetUrl) link.setAttribute('href', targetUrl);
   });
 
+  // Mostramos / ocultamos el menú del chat
   chatBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     chatPopup.classList.toggle('active');
   });
 
+  // Si pincha en cualquier lado que no sea el chat, lo cerramos
   document.addEventListener('click', (e) => {
     if (!chatPopup.contains(e.target) && !chatBtn.contains(e.target)) {
       chatPopup.classList.remove('active');
@@ -639,241 +894,27 @@ function initChatWidget() {
   });
 }
 
-/* ==========================================
-   6. INICIALIZACIÓN
-   ========================================== */
+
+/* =====================================================================
+   7. LA PATADA INICIAL (Arranque cuando carga la página)
+   ===================================================================== */
+
+// Juntamos los dos DOMContentLoaded que tenías sueltos en uno solo
 document.addEventListener('DOMContentLoaded', () => {
+  
+  // 1. Levantamos el carrusel de banderas
+  initGallery();
+
+  // 2. Prendemos el widget del chat
   initChatWidget();
 
+  // 3. Le ponemos la oreja al buscador
   if (DOM.searchInput) {
     DOM.searchInput.addEventListener('input', handleSearch);
   }
 
+  // 4. Si el archivo de las recetas cargó joya, renderizamos todo
   if (typeof recipes !== 'undefined') {
     renderRecipes(recipes);
   }
 });
-
-
-
-
-// Configuración de datos
-const SLIDES = [
-  {
-    image: "./img/Bandera_Argentina.jpg",
-    title: "Argentina"
-  },
-  {
-    image: "./img/Bandera_Paraguay.jpg",
-    title: "Paraguay"
-  },
-  {
-    image: "./img/Bandera_Chile.jpg",
-    title: "Chile"
-  },
-//  {
-//    image: "./img/Bandera_Peru.jpg",
-//    title: "Peru"
-//  }
-];
-
-// Parámetros de la animación 3D
-const CONFIG = {
-  gap: 8,          // Distancia horizontal entre tarjetas
-  tilt: 12,        // Inclinación en el eje Y (grados)
-  sideTilt: 8,     // Inclinación en el eje Z (grados)
-  depth: 240,      // Profundidad 3D (px)
-  scaleStep: 0.16, // Reducción de escala por nivel
-  maxVisible: 2,   // Tarjetas visibles a cada lado de la activa
-  dimOpacity: 0.4  // Opacidad de las tarjetas inactivas (0 a 1)
-};
-
-let activeIndex = 0;
-let isLocked = false;
-
-const container = document.querySelector('.coverflow-container');
-const track = document.getElementById('coverflowTrack');
-
-// Inicializar la galería
-function initGallery() {
-  track.innerHTML = '';
-  
-  SLIDES.forEach((slide, index) => {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.setAttribute('data-index', index);
-    
-    card.innerHTML = `
-      <img src="${slide.image}" alt="${slide.title}">
-      <div class="card-gradient"></div>
-      <div class="card-title">${slide.title}</div>
-      <div class="card-dimmer"></div>
-    `;
-    
-    card.addEventListener('click', () => handleCardClick(index));
-    track.appendChild(card);
-  });
-
-  updateCoverflow();
-}
-
-// Calcular y aplicar transformaciones 3D
-function updateCoverflow(dragOffset = 0, isDraggingStatus = false) {
-  const cards = Array.from(track.children);
-  const total = cards.length;
-
-  cards.forEach((card, i) => {
-    // MAGIA: Sumamos la posición activa con el movimiento del dedo en tiempo real
-    let rel = i - (activeIndex + dragOffset);
-
-    // Cálculo de ciclo continuo (Loop)
-    if (rel > total / 2) rel -= total;
-    if (rel < -total / 2) rel += total;
-
-    const absRel = Math.abs(rel);
-    const isVisible = absRel <= CONFIG.maxVisible;
-    const isActive = rel === 0 && dragOffset === 0;
-
-    const currentDepth = window.innerWidth <= 768 ? 500 : (CONFIG.depth || 240);
-    const currentGap = window.innerWidth <= 768 ? 4 : (CONFIG.gap || 8);
-
-    const scale = Math.max(0.4, 1 - absRel * CONFIG.scaleStep);
-    const tx = rel * (currentGap * 30);
-    const tz = -absRel * currentDepth;
-    const ry = -rel * CONFIG.tilt;
-    const rz = rel * CONFIG.sideTilt;
-
-    // APAGAR TRANSICIÓN CSS SI ESTÁ ARRASTRANDO (evita el lag del dedo)
-    card.style.transition = isDraggingStatus ? 'none' : '';
-
-    // Transformación CSS
-    card.style.transform = `
-      translate(-50%, -50%) 
-      translateX(${tx}px) 
-      translateZ(${tz}px) 
-      rotateY(${ry}deg) 
-      rotateZ(${rz}deg) 
-      scale(${scale})
-    `;
-
-    card.style.opacity = isVisible ? 1 : 0;
-    card.style.pointerEvents = isVisible ? 'auto' : 'none';
-    card.style.cursor = isActive ? 'default' : 'pointer';
-
-    const dimmer = card.querySelector('.card-dimmer');
-    if (dimmer) {
-      dimmer.style.transition = isDraggingStatus ? 'none' : '';
-      dimmer.style.opacity = isActive ? 0 : CONFIG.dimOpacity;
-    }
-  });
-}
-
-// Bloqueo temporal para animaciones fluidas
-function lockTransition() {
-  isLocked = true;
-  setTimeout(() => {
-    isLocked = false;
-  }, 600); // Coincide con el tiempo de transición CSS (0.6s)
-}
-
-function handleCardClick(index) {
-  if (isLocked) return;
-  lockTransition();
-  
-  if (index === activeIndex) {
-    activeIndex = (activeIndex + 1) % SLIDES.length;
-  } else {
-    activeIndex = index;
-  }
-  updateCoverflow();
-}
-
-// Navegación con teclado (Flecha izquierda / derecha)
-container.addEventListener('keydown', (e) => {
-  if (isLocked) return;
-
-  if (e.key === 'ArrowRight') {
-    lockTransition();
-    activeIndex = (activeIndex + 1) % SLIDES.length;
-    updateCoverflow();
-  } else if (e.key === 'ArrowLeft') {
-    lockTransition();
-    activeIndex = (activeIndex - 1 + SLIDES.length) % SLIDES.length;
-    updateCoverflow();
-  }
-});
-// ==========================================
-// SOPORTE PARA DESLIZAR EN TIEMPO REAL (SWIPE/DRAG)
-// ==========================================
-let startX = 0;
-let isDragging = false;
-let dragOffset = 0;
-
-// Determina cuántos píxeles hay que arrastrar para pasar "1" tarjeta completa.
-// Usamos el 40% del ancho de la pantalla para que sea proporcional.
-const dragSensitivity = window.innerWidth * 0.4; 
-
-// Eventos táctiles (Móviles)
-container.addEventListener('touchstart', (e) => {
-  if (isLocked) return;
-  isDragging = true;
-  startX = e.touches[0].clientX;
-}, { passive: true });
-
-container.addEventListener('touchmove', (e) => {
-  if (!isDragging || isLocked) return;
-  const currentX = e.touches[0].clientX;
-  const diffX = startX - currentX; // Positivo si vas izq, negativo si vas der
-  
-  // Convertimos los píxeles a "porcentaje de tarjeta" (ej: 0.5 es media tarjeta)
-  dragOffset = diffX / dragSensitivity;
-  
-  // Actualizamos la galería en tiempo real sin animaciones CSS
-  updateCoverflow(dragOffset, true);
-}, { passive: true });
-
-container.addEventListener('touchend', finalizarDeslizamiento);
-
-// Eventos de mouse (Computadoras)
-container.addEventListener('mousedown', (e) => {
-  if (isLocked) return;
-  isDragging = true;
-  startX = e.clientX;
-  container.style.cursor = 'grabbing';
-});
-
-container.addEventListener('mousemove', (e) => {
-  if (!isDragging || isLocked) return;
-  const currentX = e.clientX;
-  const diffX = startX - currentX;
-  
-  dragOffset = diffX / dragSensitivity;
-  updateCoverflow(dragOffset, true);
-});
-
-container.addEventListener('mouseup', finalizarDeslizamiento);
-container.addEventListener('mouseleave', () => {
-  if (isDragging) finalizarDeslizamiento();
-});
-
-// Función para soltar la tarjeta
-function finalizarDeslizamiento() {
-  if (!isDragging) return;
-  isDragging = false;
-  container.style.cursor = 'default';
-
-  // Si arrastró más del 25% (0.25) cambiamos de tarjeta definitivamente
-  if (dragOffset > 0.25) {
-    activeIndex = (activeIndex + 1) % SLIDES.length;
-  } else if (dragOffset < -0.25) {
-    activeIndex = (activeIndex - 1 + SLIDES.length) % SLIDES.length;
-  }
-
-  // Reiniciamos el offset a 0 y devolvemos la transición de CSS (false)
-  dragOffset = 0;
-  lockTransition(); // Bloquea clics rápidos mientras termina de animar
-  updateCoverflow(0, false);
-}
-
-// Renderizar al cargar la página
-document.addEventListener('DOMContentLoaded', initGallery);
